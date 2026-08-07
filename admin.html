@@ -1,0 +1,1224 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Painel Administrativo - Perfumaria</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        body {
+            background: #fff8fb;
+            color: #333;
+        }
+
+        /* =========================
+           CABEÇALHO
+        ========================== */
+
+        header {
+            background: white;
+            border-bottom: 1px solid #f1d2de;
+            padding: 18px 25px;
+        }
+
+        .topo {
+            max-width: 1200px;
+            margin: auto;
+
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            color: #d85b86;
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .subtitulo {
+            color: #888;
+            font-size: 13px;
+            margin-top: 4px;
+        }
+
+        .botao-loja {
+            border: none;
+            background: #f7d5e1;
+            color: #b83f6b;
+            padding: 11px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* =========================
+           CONTAINER
+        ========================== */
+
+        .container {
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+
+        .titulo {
+            color: #b83f6b;
+            margin-bottom: 20px;
+        }
+
+        /* =========================
+           FORMULÁRIO
+        ========================== */
+
+        .card {
+            background: white;
+            border: 1px solid #f1d2de;
+            border-radius: 18px;
+            padding: 25px;
+            margin-bottom: 30px;
+
+            box-shadow: 0 5px 20px rgba(216, 91, 134, 0.07);
+        }
+
+        .card h2 {
+            color: #c94e78;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .formulario {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 16px;
+        }
+
+        .campo {
+            display: flex;
+            flex-direction: column;
+            gap: 7px;
+        }
+
+        .campo.completo {
+            grid-column: 1 / -1;
+        }
+
+        label {
+            font-size: 14px;
+            font-weight: bold;
+            color: #555;
+        }
+
+        input,
+        textarea {
+            border: 1px solid #e6ccd6;
+            border-radius: 10px;
+            padding: 12px;
+            outline: none;
+            font-size: 14px;
+            background: #fff;
+        }
+
+        input:focus,
+        textarea:focus {
+            border-color: #d85b86;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 90px;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+        }
+
+        .preview {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 12px;
+            border: 1px solid #f1d2de;
+            display: none;
+            margin-top: 5px;
+        }
+
+        .botoes-formulario {
+            grid-column: 1 / -1;
+            display: flex;
+            gap: 10px;
+            margin-top: 5px;
+        }
+
+        .botao-principal {
+            border: none;
+            background: #d85b86;
+            color: white;
+            padding: 13px 22px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .botao-principal:hover {
+            background: #c34772;
+        }
+
+        .botao-cancelar {
+            border: none;
+            background: #eee;
+            color: #555;
+            padding: 13px 22px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-weight: bold;
+            display: none;
+        }
+
+        /* =========================
+           PESQUISA
+        ========================== */
+
+        .pesquisa {
+            width: 100%;
+            margin-bottom: 20px;
+            border-radius: 25px;
+        }
+
+        /* =========================
+           PRODUTOS
+        ========================== */
+
+        .produtos {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 18px;
+        }
+
+        .produto {
+            background: white;
+            border: 1px solid #f1d2de;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(216, 91, 134, 0.07);
+        }
+
+        .produto img {
+            width: 100%;
+            height: 210px;
+            object-fit: cover;
+            display: block;
+            background: #f8e9ef;
+        }
+
+        .informacoes {
+            padding: 15px;
+        }
+
+        .nome {
+            font-size: 17px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .marca {
+            color: #c94e78;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .descricao {
+            color: #777;
+            font-size: 13px;
+            line-height: 1.4;
+            margin-bottom: 10px;
+        }
+
+        .codigo {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .preco {
+            color: #d04f7d;
+            font-size: 19px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .estoque {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+
+            background: #fff4f7;
+            padding: 9px;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+
+        .estoque strong {
+            color: #b83f6b;
+        }
+
+        .sem-estoque {
+            color: #d9534f !important;
+        }
+
+        /* =========================
+           AÇÕES
+        ========================== */
+
+        .acoes {
+            display: flex;
+            gap: 8px;
+        }
+
+        .botao-editar,
+        .botao-excluir {
+            flex: 1;
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .botao-editar {
+            background: #f7d5e1;
+            color: #a93860;
+        }
+
+        .botao-excluir {
+            background: #ffe1e1;
+            color: #c33;
+        }
+
+        /* =========================
+           ESTATÍSTICAS
+        ========================== */
+
+        .estatisticas {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .estatistica {
+            background: white;
+            border: 1px solid #f1d2de;
+            border-radius: 15px;
+            padding: 20px;
+        }
+
+        .estatistica span {
+            color: #888;
+            font-size: 13px;
+        }
+
+        .estatistica strong {
+            display: block;
+            color: #c94e78;
+            font-size: 27px;
+            margin-top: 7px;
+        }
+
+        /* =========================
+           RESPONSIVO
+        ========================== */
+
+        @media (max-width: 900px) {
+
+            .produtos {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+        }
+
+        @media (max-width: 650px) {
+
+            header {
+                padding: 15px;
+            }
+
+            .topo {
+                align-items: flex-start;
+            }
+
+            .logo {
+                font-size: 20px;
+            }
+
+            .subtitulo {
+                font-size: 11px;
+            }
+
+            .container {
+                padding: 0 12px;
+                margin-top: 20px;
+            }
+
+            .formulario {
+                grid-template-columns: 1fr;
+            }
+
+            .campo.completo {
+                grid-column: auto;
+            }
+
+            .botoes-formulario {
+                grid-column: auto;
+                flex-direction: column;
+            }
+
+            .produtos {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+
+            .produto img {
+                height: 180px;
+            }
+
+            .estatisticas {
+                grid-template-columns: 1fr;
+            }
+
+            .acoes {
+                flex-direction: column;
+            }
+
+        }
+
+        @media (max-width: 380px) {
+
+            .produtos {
+                grid-template-columns: 1fr;
+            }
+
+        }
+
+        /* =========================
+           LOGIN DA DONA
+        ========================== */
+        #telaLogin {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #fff8fb, #f7d5e1);
+        }
+
+        .caixa-login {
+            width: 100%;
+            max-width: 420px;
+            background: white;
+            border: 1px solid #f1d2de;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 10px 35px rgba(216, 91, 134, 0.12);
+        }
+
+        .caixa-login h1 {
+            color: #b83f6b;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        .caixa-login p {
+            color: #777;
+            text-align: center;
+            margin-bottom: 25px;
+            font-size: 14px;
+        }
+
+        .login-campo {
+            margin-bottom: 15px;
+        }
+
+        .login-campo label {
+            display: block;
+            margin-bottom: 7px;
+        }
+
+        .login-campo input {
+            width: 100%;
+        }
+
+        #mensagemLogin {
+            min-height: 20px;
+            color: #c33;
+            text-align: center;
+            font-size: 13px;
+            margin: 10px 0;
+        }
+
+        #painel {
+            display: none;
+        }
+
+        .botao-sair {
+            border: none;
+            background: #ffe1e1;
+            color: #b22;
+            padding: 11px 16px;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .carregando {
+            opacity: 0.65;
+            pointer-events: none;
+        }
+    </style>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+
+<body>
+
+    <section id="telaLogin">
+        <div class="caixa-login">
+            <h1>🔐 Essência Perfumaria</h1>
+            <p>Acesso exclusivo da dona</p>
+            <form id="formLogin">
+                <div class="login-campo">
+                    <label for="emailLogin">E-mail</label>
+                    <input type="email" id="emailLogin" placeholder="Digite o e-mail" required autocomplete="username">
+                </div>
+                <div class="login-campo">
+                    <label for="senhaLogin">Senha</label>
+                    <input type="password" id="senhaLogin" placeholder="Digite a senha" required autocomplete="current-password">
+                </div>
+                <div id="mensagemLogin"></div>
+                <button type="submit" class="botao-principal" style="width:100%;">Entrar no painel</button>
+            </form>
+        </div>
+    </section>
+
+    <div id="painel">
+    <!-- =========================
+         CABEÇALHO
+    ========================== -->
+
+    <header>
+
+        <div class="topo">
+
+            <div>
+
+                <div class="logo">
+                    Essência Perfumaria
+                </div>
+
+                <div class="subtitulo">
+                    Painel administrativo
+                </div>
+
+            </div>
+
+            <button
+                class="botao-loja"
+                onclick="abrirLoja()">
+
+                🛍️ Ver loja
+
+            </button>
+
+            <button class="botao-sair" onclick="sair()">🚪 Sair</button>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================
+         CONTEÚDO
+    ========================== -->
+
+    <main class="container">
+
+        <h1 class="titulo">
+            Gerenciamento de produtos
+        </h1>
+
+
+        <!-- =========================
+             ESTATÍSTICAS
+        ========================== -->
+
+        <section class="estatisticas">
+
+            <div class="estatistica">
+
+                <span>
+                    Produtos cadastrados
+                </span>
+
+                <strong id="totalProdutos">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="estatistica">
+
+                <span>
+                    Produtos em estoque
+                </span>
+
+                <strong id="produtosDisponiveis">
+                    0
+                </strong>
+
+            </div>
+
+
+            <div class="estatistica">
+
+                <span>
+                    Unidades em estoque
+                </span>
+
+                <strong id="totalUnidades">
+                    0
+                </strong>
+
+            </div>
+
+        </section>
+
+
+        <!-- =========================
+             CADASTRO
+        ========================== -->
+
+        <section class="card">
+
+            <h2 id="tituloFormulario">
+                ➕ Cadastrar perfume
+            </h2>
+
+
+            <form
+                id="formProduto"
+                class="formulario">
+
+
+                <!-- NOME -->
+
+                <div class="campo">
+
+                    <label for="nome">
+                        Nome do perfume *
+                    </label>
+
+                    <input
+                        type="text"
+                        id="nome"
+                        placeholder="Ex.: Egeo Bomb"
+                        required>
+
+                </div>
+
+
+                <!-- MARCA -->
+
+                <div class="campo">
+
+                    <label for="marca">
+                        Marca *
+                    </label>
+
+                    <input
+                        type="text"
+                        id="marca"
+                        placeholder="Ex.: O Boticário"
+                        required>
+
+                </div>
+
+
+                <!-- PREÇO -->
+
+                <div class="campo">
+
+                    <label for="preco">
+                        Preço *
+                    </label>
+
+                    <input
+                        type="number"
+                        id="preco"
+                        placeholder="0,00"
+                        step="0.01"
+                        min="0"
+                        required>
+
+                </div>
+
+
+                <!-- ESTOQUE -->
+
+                <div class="campo">
+
+                    <label for="estoque">
+                        Quantidade em estoque *
+                    </label>
+
+                    <input
+                        type="number"
+                        id="estoque"
+                        placeholder="Ex.: 10"
+                        min="0"
+                        step="1"
+                        required>
+
+                </div>
+
+
+                <!-- SKU -->
+
+                <div class="campo">
+
+                    <label for="sku">
+                        Código / SKU *
+                    </label>
+
+                    <input
+                        type="text"
+                        id="sku"
+                        placeholder="Ex.: PERF-001"
+                        required>
+
+                </div>
+
+
+                <!-- FOTO -->
+
+                <div class="campo">
+
+                    <label for="foto">
+                        Foto do perfume *
+                    </label>
+
+                    <input
+                        type="file"
+                        id="foto"
+                        accept="image/*">
+
+                    <img
+                        id="preview"
+                        class="preview"
+                        alt="Prévia da foto">
+
+                </div>
+
+
+                <!-- DESCRIÇÃO -->
+
+                <div class="campo completo">
+
+                    <label for="descricao">
+                        Descrição
+                    </label>
+
+                    <textarea
+                        id="descricao"
+                        placeholder="Digite uma descrição do perfume...">
+                    </textarea>
+
+                </div>
+
+
+                <!-- BOTÕES -->
+
+                <div class="botoes-formulario">
+
+                    <button
+                        type="submit"
+                        class="botao-principal"
+                        id="botaoSalvar">
+
+                        Cadastrar perfume
+
+                    </button>
+
+                    <button
+                        type="button"
+                        class="botao-cancelar"
+                        id="botaoCancelar"
+                        onclick="cancelarEdicao()">
+
+                        Cancelar edição
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+
+        <!-- =========================
+             LISTA
+        ========================== -->
+
+        <section class="card">
+
+            <h2>
+                📦 Produtos cadastrados
+            </h2>
+
+
+            <input
+                type="text"
+                id="pesquisa"
+                class="pesquisa"
+                placeholder="🔎 Pesquisar por nome, marca ou SKU..."
+                oninput="pesquisarProdutos()">
+
+
+            <div
+                id="produtos"
+                class="produtos">
+            </div>
+
+        </section>
+
+    </main>
+    </div>
+
+
+    <script>
+        /* =========================================================
+           CONEXÃO COM O SUPABASE
+        ========================================================== */
+        const SUPABASE_URL = "https://hltnkbipjwjlnnbszwks.supabase.co";
+        const SUPABASE_CHAVE_PUBLICA = "sb_publishable_t-TXu6PnQANWMdZRS2cDHg_o38BxttG";
+
+        const { createClient } = supabase;
+        const banco = createClient(SUPABASE_URL, SUPABASE_CHAVE_PUBLICA);
+
+        let produtos = [];
+        let editandoId = null;
+
+        /* =========================================================
+           LOGIN
+        ========================================================== */
+        const telaLogin = document.getElementById("telaLogin");
+        const painel = document.getElementById("painel");
+        const formLogin = document.getElementById("formLogin");
+        const mensagemLogin = document.getElementById("mensagemLogin");
+
+        async function iniciarSistema() {
+            const { data: { session } } = await banco.auth.getSession();
+
+            if (session) {
+                mostrarPainel();
+            } else {
+                mostrarLogin();
+            }
+        }
+
+        function mostrarLogin() {
+            telaLogin.style.display = "flex";
+            painel.style.display = "none";
+        }
+
+        async function mostrarPainel() {
+            telaLogin.style.display = "none";
+            painel.style.display = "block";
+            await carregarProdutos();
+        }
+
+        formLogin.addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const email = document.getElementById("emailLogin").value.trim();
+            const senha = document.getElementById("senhaLogin").value;
+            const botao = formLogin.querySelector("button");
+
+            mensagemLogin.textContent = "Entrando...";
+            botao.disabled = true;
+
+            const { error } = await banco.auth.signInWithPassword({
+                email,
+                password: senha
+            });
+
+            botao.disabled = false;
+
+            if (error) {
+                console.error("Erro no login:", error);
+
+                const mensagem =
+                    error.message &&
+                    error.message.toLowerCase().includes("email not confirmed")
+                        ? "Este e-mail ainda não foi confirmado no Supabase."
+                        : "E-mail ou senha incorretos.";
+
+                mensagemLogin.textContent = mensagem;
+                botao.disabled = false;
+                return;
+            }
+
+            mensagemLogin.textContent = "";
+            formLogin.reset();
+            await mostrarPainel();
+        });
+
+        async function sair() {
+            await banco.auth.signOut();
+            produtos = [];
+            mostrarLogin();
+        }
+
+        banco.auth.onAuthStateChange((_evento, session) => {
+            if (session) {
+                telaLogin.style.display = "none";
+                painel.style.display = "block";
+            } else {
+                mostrarLogin();
+            }
+        });
+
+        /* =========================================================
+           CARREGAR PRODUTOS DO BANCO ONLINE
+        ========================================================== */
+        async function carregarProdutos() {
+            const { data, error } = await banco
+                .from("produtos")
+                .select("*")
+                .order("created_at", { ascending: false });
+
+            if (error) {
+                console.error("Erro ao carregar produtos:", error);
+                alert("Não foi possível carregar os produtos. Verifique as permissões da tabela no Supabase.");
+                produtos = [];
+            } else {
+                produtos = data || [];
+            }
+
+            atualizarTudo();
+        }
+
+        /* =========================================================
+           CADASTRAR / EDITAR
+        ========================================================== */
+        document.getElementById("formProduto").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const nome = document.getElementById("nome").value.trim();
+            const marca = document.getElementById("marca").value.trim();
+            const preco = parseFloat(document.getElementById("preco").value);
+            const estoque = parseInt(document.getElementById("estoque").value, 10);
+            const sku = document.getElementById("sku").value.trim();
+            const descricao = document.getElementById("descricao").value.trim();
+            const arquivo = document.getElementById("foto").files[0];
+            const botao = document.getElementById("botaoSalvar");
+
+            if (!nome || !marca || !sku) {
+                alert("Preencha os campos obrigatórios.");
+                return;
+            }
+
+            if (isNaN(preco) || preco < 0) {
+                alert("Digite um preço válido.");
+                return;
+            }
+
+            if (isNaN(estoque) || estoque < 0) {
+                alert("Digite um estoque válido.");
+                return;
+            }
+
+            botao.disabled = true;
+            botao.textContent = editandoId === null ? "Salvando..." : "Atualizando...";
+
+            try {
+                let imagem = "";
+
+                if (arquivo) {
+                    imagem = await converterImagem(arquivo);
+                } else if (editandoId !== null) {
+                    const produtoAtual = produtos.find(p => Number(p.id) === Number(editandoId));
+                    imagem = produtoAtual ? (produtoAtual.imagem || "") : "";
+                }
+
+                const dadosProduto = {
+                    nome,
+                    marca,
+                    descricao,
+                    sku,
+                    preco,
+                    estoque,
+                    imagem
+                };
+
+                let erro;
+
+                if (editandoId === null) {
+                    const resultado = await banco
+                        .from("produtos")
+                        .insert(dadosProduto)
+                        .select()
+                        .single();
+
+                    erro = resultado.error;
+
+                    if (!erro) {
+                        alert("Perfume cadastrado com sucesso!");
+                    }
+                } else {
+                    const resultado = await banco
+                        .from("produtos")
+                        .update(dadosProduto)
+                        .eq("id", editandoId)
+                        .select()
+                        .single();
+
+                    erro = resultado.error;
+
+                    if (!erro) {
+                        alert("Produto atualizado com sucesso!");
+                    }
+                }
+
+                if (erro) {
+                    console.error("Erro ao salvar produto:", erro);
+                    alert("Não foi possível salvar o produto. Se aparecer um erro de permissão, vamos corrigir as regras do banco no próximo passo.");
+                    return;
+                }
+
+                limparFormulario();
+                await carregarProdutos();
+            } catch (erro) {
+                console.error(erro);
+                alert("Ocorreu um erro ao salvar o produto.");
+            } finally {
+                botao.disabled = false;
+                botao.textContent = editandoId === null ? "Cadastrar perfume" : "Salvar alterações";
+            }
+        });
+
+        /* =========================================================
+           CONVERTER FOTO
+           A foto fica armazenada na coluna imagem.
+           Em uma próxima etapa podemos migrar para o armazenamento
+           de arquivos do Supabase se necessário.
+        ========================================================== */
+        function converterImagem(arquivo) {
+            return new Promise((resolve, reject) => {
+                const leitor = new FileReader();
+                leitor.onload = () => resolve(leitor.result);
+                leitor.onerror = () => reject(leitor.error);
+                leitor.readAsDataURL(arquivo);
+            });
+        }
+
+        document.getElementById("foto").addEventListener("change", function() {
+            const arquivo = this.files[0];
+            const preview = document.getElementById("preview");
+
+            if (!arquivo) {
+                preview.style.display = "none";
+                return;
+            }
+
+            const leitor = new FileReader();
+            leitor.onload = function(event) {
+                preview.src = event.target.result;
+                preview.style.display = "block";
+            };
+            leitor.readAsDataURL(arquivo);
+        });
+
+        /* =========================================================
+           MOSTRAR PRODUTOS
+        ========================================================== */
+        function mostrarProdutos(lista = produtos) {
+            const container = document.getElementById("produtos");
+            container.innerHTML = "";
+
+            if (lista.length === 0) {
+                container.innerHTML = `
+                    <div style="grid-column:1/-1;text-align:center;color:#999;padding:30px;">
+                        Nenhum produto cadastrado.
+                    </div>
+                `;
+                return;
+            }
+
+            lista.forEach(produto => {
+                const card = document.createElement("div");
+                card.className = "produto";
+
+                const imagem = produto.imagem || "https://via.placeholder.com/600x600?text=Sem+Foto";
+                const estoqueClasse = Number(produto.estoque) <= 0 ? "sem-estoque" : "";
+                const statusEstoque = Number(produto.estoque) <= 0
+                    ? "Sem estoque"
+                    : Number(produto.estoque) + " unidade(s)";
+
+                card.innerHTML = `
+                    <img src="${imagem}" alt="${escaparHTML(produto.nome)}">
+                    <div class="informacoes">
+                        <div class="nome">${escaparHTML(produto.nome)}</div>
+                        <div class="marca">${escaparHTML(produto.marca)}</div>
+                        <div class="descricao">${escaparHTML(produto.descricao || "Sem descrição.")}</div>
+                        <div class="codigo">SKU: ${escaparHTML(produto.sku)}</div>
+                        <div class="preco">R$ ${Number(produto.preco).toFixed(2).replace(".", ",")}</div>
+                        <div class="estoque">
+                            <span>Estoque</span>
+                            <strong class="${estoqueClasse}">${statusEstoque}</strong>
+                        </div>
+                        <div class="acoes">
+                            <button class="botao-editar" onclick="editarProduto(${Number(produto.id)})">✏️ Editar</button>
+                            <button class="botao-excluir" onclick="excluirProduto(${Number(produto.id)})">🗑️ Excluir</button>
+                        </div>
+                    </div>
+                `;
+
+                container.appendChild(card);
+            });
+        }
+
+        /* =========================================================
+           EDITAR PRODUTO
+        ========================================================== */
+        function editarProduto(id) {
+            const produto = produtos.find(p => Number(p.id) === Number(id));
+            if (!produto) return;
+
+            editandoId = Number(id);
+
+            document.getElementById("nome").value = produto.nome || "";
+            document.getElementById("marca").value = produto.marca || "";
+            document.getElementById("preco").value = produto.preco ?? "";
+            document.getElementById("estoque").value = produto.estoque ?? "";
+            document.getElementById("sku").value = produto.sku || "";
+            document.getElementById("descricao").value = produto.descricao || "";
+
+            const preview = document.getElementById("preview");
+            if (produto.imagem) {
+                preview.src = produto.imagem;
+                preview.style.display = "block";
+            } else {
+                preview.style.display = "none";
+            }
+
+            document.getElementById("tituloFormulario").textContent = "✏️ Editando perfume";
+            document.getElementById("botaoSalvar").textContent = "Salvar alterações";
+            document.getElementById("botaoCancelar").style.display = "block";
+
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        /* =========================================================
+           EXCLUIR PRODUTO
+        ========================================================== */
+        async function excluirProduto(id) {
+            const produto = produtos.find(p => Number(p.id) === Number(id));
+            if (!produto) return;
+
+            const confirmar = confirm(`Deseja excluir "${produto.nome}"?`);
+            if (!confirmar) return;
+
+            const { error } = await banco
+                .from("produtos")
+                .delete()
+                .eq("id", id);
+
+            if (error) {
+                console.error("Erro ao excluir produto:", error);
+                alert("Não foi possível excluir o produto. Verifique as permissões do banco.");
+                return;
+            }
+
+            alert("Produto excluído com sucesso!");
+            await carregarProdutos();
+        }
+
+        function cancelarEdicao() {
+            limparFormulario();
+        }
+
+        function limparFormulario() {
+            document.getElementById("formProduto").reset();
+            document.getElementById("preview").style.display = "none";
+            document.getElementById("tituloFormulario").textContent = "➕ Cadastrar perfume";
+            document.getElementById("botaoSalvar").textContent = "Cadastrar perfume";
+            document.getElementById("botaoCancelar").style.display = "none";
+            editandoId = null;
+        }
+
+        /* =========================================================
+           PESQUISA
+        ========================================================== */
+        function pesquisarProdutos() {
+            const texto = document.getElementById("pesquisa").value.toLowerCase().trim();
+
+            const filtrados = produtos.filter(produto =>
+                String(produto.nome || "").toLowerCase().includes(texto) ||
+                String(produto.marca || "").toLowerCase().includes(texto) ||
+                String(produto.sku || "").toLowerCase().includes(texto)
+            );
+
+            mostrarProdutos(filtrados);
+        }
+
+        /* =========================================================
+           ESTATÍSTICAS
+        ========================================================== */
+        function atualizarEstatisticas() {
+            document.getElementById("totalProdutos").textContent = produtos.length;
+
+            const disponiveis = produtos.filter(p => Number(p.estoque) > 0).length;
+            document.getElementById("produtosDisponiveis").textContent = disponiveis;
+
+            const unidades = produtos.reduce((total, produto) => total + Number(produto.estoque || 0), 0);
+            document.getElementById("totalUnidades").textContent = unidades;
+        }
+
+        function atualizarTudo() {
+            mostrarProdutos();
+            atualizarEstatisticas();
+        }
+
+        function escaparHTML(texto) {
+            return String(texto)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        function abrirLoja() {
+            window.location.href = "index.html";
+        }
+
+        /* =========================================================
+           INICIAR
+        ========================================================== */
+        iniciarSistema();
+    </script>
+
+</body>
+</html>
+```

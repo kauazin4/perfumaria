@@ -1,0 +1,1892 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0">
+
+    <title>Essência Perfumaria</title>
+
+
+    <style>
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+
+        body {
+            background: #fff8fb;
+            color: #333;
+        }
+
+
+        /* =========================
+           CABEÇALHO
+        ========================== */
+
+        header {
+            background: #ffffff;
+            border-bottom: 1px solid #f3d6e1;
+
+            position: sticky;
+            top: 0;
+
+            z-index: 100;
+        }
+
+
+        .topo {
+
+            max-width: 1200px;
+
+            margin: auto;
+
+            padding: 18px 20px;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: space-between;
+
+            gap: 20px;
+
+        }
+
+
+        .logo {
+
+            color: #d85b86;
+
+            font-size: 25px;
+
+            font-weight: bold;
+
+            white-space: nowrap;
+
+        }
+
+
+        .subtitulo {
+
+            color: #888;
+
+            font-size: 12px;
+
+            margin-top: 3px;
+
+        }
+
+
+        /* =========================
+           CARRINHO
+        ========================== */
+
+        .botao-carrinho {
+
+            border: none;
+
+            background: #f7d5e1;
+
+            color: #b83f6b;
+
+            padding: 11px 16px;
+
+            border-radius: 25px;
+
+            cursor: pointer;
+
+            font-size: 15px;
+
+            font-weight: bold;
+
+        }
+
+
+        #quantidadeCarrinho {
+
+            background: #d85b86;
+
+            color: white;
+
+            border-radius: 50%;
+
+            padding: 3px 7px;
+
+            font-size: 12px;
+
+            margin-left: 4px;
+
+        }
+
+
+        /* =========================
+           BANNER
+        ========================== */
+
+        .banner {
+
+            max-width: 1200px;
+
+            margin: 25px auto 10px;
+
+            padding: 45px 25px;
+
+            border-radius: 20px;
+
+            background:
+                linear-gradient(
+                    135deg,
+                    #ffe6ef,
+                    #fff5f8
+                );
+
+            text-align: center;
+
+        }
+
+
+        .banner h1 {
+
+            color: #c94e78;
+
+            font-size: 32px;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .banner p {
+
+            color: #777;
+
+            font-size: 16px;
+
+        }
+
+
+        /* =========================
+           PESQUISA
+        ========================== */
+
+        .area-pesquisa {
+
+            max-width: 1200px;
+
+            margin: 25px auto;
+
+            padding: 0 20px;
+
+        }
+
+
+        .pesquisa {
+
+            width: 100%;
+
+            border: 1px solid #efcbd8;
+
+            background: white;
+
+            border-radius: 30px;
+
+            padding: 14px 20px;
+
+            outline: none;
+
+            font-size: 15px;
+
+        }
+
+
+        .pesquisa:focus {
+
+            border-color: #d85b86;
+
+        }
+
+
+        /* =========================
+           PRODUTOS
+        ========================== */
+
+        .container {
+
+            max-width: 1200px;
+
+            margin: auto;
+
+            padding: 10px 20px 50px;
+
+        }
+
+
+        .titulo-secao {
+
+            color: #b83f6b;
+
+            margin-bottom: 20px;
+
+            font-size: 22px;
+
+        }
+
+
+        .produtos {
+
+            display: grid;
+
+            grid-template-columns:
+                repeat(4, 1fr);
+
+            gap: 20px;
+
+        }
+
+
+        .produto {
+
+            background: white;
+
+            border: 1px solid #f3d6e1;
+
+            border-radius: 18px;
+
+            overflow: hidden;
+
+            box-shadow:
+                0 5px 18px
+                rgba(216, 91, 134, 0.08);
+
+            transition: 0.25s;
+
+        }
+
+
+        .produto:hover {
+
+            transform: translateY(-4px);
+
+        }
+
+
+        .imagem-produto {
+
+            width: 100%;
+
+            height: 240px;
+
+            object-fit: cover;
+
+            display: block;
+
+            background: #f8e9ef;
+
+        }
+
+
+        .informacoes {
+
+            padding: 16px;
+
+        }
+
+
+        .nome-produto {
+
+            font-size: 17px;
+
+            font-weight: bold;
+
+            color: #444;
+
+            margin-bottom: 5px;
+
+        }
+
+
+        .marca-produto {
+
+            color: #c94e78;
+
+            font-size: 13px;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .descricao-produto {
+
+            color: #777;
+
+            font-size: 13px;
+
+            line-height: 1.4;
+
+            margin-bottom: 10px;
+
+        }
+
+
+        .codigo-produto {
+
+            color: #aaa;
+
+            font-size: 11px;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .preco {
+
+            color: #d04f7d;
+
+            font-size: 20px;
+
+            font-weight: bold;
+
+            margin-bottom: 8px;
+
+        }
+
+
+        .estoque {
+
+            color: #777;
+
+            font-size: 13px;
+
+            margin-bottom: 13px;
+
+        }
+
+
+        .botao-adicionar {
+
+            width: 100%;
+
+            border: none;
+
+            background: #d85b86;
+
+            color: white;
+
+            padding: 12px;
+
+            border-radius: 10px;
+
+            cursor: pointer;
+
+            font-weight: bold;
+
+        }
+
+
+        .botao-adicionar:hover {
+
+            background: #c34772;
+
+        }
+
+
+        /* =========================
+           SEM PRODUTOS
+        ========================== */
+
+        .sem-produtos {
+
+            text-align: center;
+
+            color: #888;
+
+            padding: 50px 20px;
+
+        }
+
+
+        /* =========================
+           CARRINHO
+        ========================== */
+
+        .fundo-carrinho {
+
+            display: none;
+
+            position: fixed;
+
+            inset: 0;
+
+            background:
+                rgba(0, 0, 0, 0.35);
+
+            z-index: 200;
+
+        }
+
+
+        .fundo-carrinho.ativo {
+
+            display: block;
+
+        }
+
+
+        .carrinho {
+
+            position: fixed;
+
+            right: -420px;
+
+            top: 0;
+
+            width: 400px;
+
+            max-width: 92%;
+
+            height: 100%;
+
+            background: white;
+
+            z-index: 201;
+
+            box-shadow:
+                -5px 0 20px
+                rgba(0,0,0,0.15);
+
+            transition: 0.3s;
+
+            display: flex;
+
+            flex-direction: column;
+
+        }
+
+
+        .carrinho.aberto {
+
+            right: 0;
+
+        }
+
+
+        .cabecalho-carrinho {
+
+            padding: 20px;
+
+            border-bottom:
+                1px solid #eee;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+        }
+
+
+        .cabecalho-carrinho h2 {
+
+            color: #c94e78;
+
+        }
+
+
+        .fechar {
+
+            border: none;
+
+            background: transparent;
+
+            font-size: 25px;
+
+            cursor: pointer;
+
+            color: #777;
+
+        }
+
+
+        .itens-carrinho {
+
+            flex: 1;
+
+            overflow-y: auto;
+
+            padding: 20px;
+
+        }
+
+
+        .item-carrinho {
+
+            display: flex;
+
+            gap: 12px;
+
+            padding: 12px 0;
+
+            border-bottom:
+                1px solid #eee;
+
+        }
+
+
+        .item-carrinho img {
+
+            width: 65px;
+
+            height: 65px;
+
+            object-fit: cover;
+
+            border-radius: 10px;
+
+        }
+
+
+        .item-info {
+
+            flex: 1;
+
+        }
+
+
+        .item-nome {
+
+            font-weight: bold;
+
+            font-size: 14px;
+
+        }
+
+
+        .item-preco {
+
+            color: #d04f7d;
+
+            margin-top: 5px;
+
+        }
+
+
+        .controles {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            margin-top: 8px;
+
+        }
+
+
+        .controle {
+
+            border: none;
+
+            width: 26px;
+
+            height: 26px;
+
+            border-radius: 50%;
+
+            background: #f5d7e2;
+
+            color: #b83f6b;
+
+            cursor: pointer;
+
+            font-weight: bold;
+
+        }
+
+
+        .rodape-carrinho {
+
+            border-top:
+                1px solid #eee;
+
+            padding: 20px;
+
+        }
+
+
+        .total {
+
+            display: flex;
+
+            justify-content: space-between;
+
+            font-size: 19px;
+
+            font-weight: bold;
+
+            margin-bottom: 15px;
+
+        }
+
+
+        .total span:last-child {
+
+            color: #d04f7d;
+
+        }
+
+
+        .botao-finalizar {
+
+            width: 100%;
+
+            padding: 14px;
+
+            border: none;
+
+            border-radius: 12px;
+
+            background: #d85b86;
+
+            color: white;
+
+            font-size: 16px;
+
+            font-weight: bold;
+
+            cursor: pointer;
+
+        }
+
+
+        /* =========================
+           RODAPÉ
+        ========================== */
+
+        footer {
+
+            background: #fff;
+
+            border-top:
+                1px solid #f3d6e1;
+
+            text-align: center;
+
+            padding: 25px;
+
+            color: #999;
+
+            font-size: 13px;
+
+        }
+
+
+        /* =========================
+           RESPONSIVO
+        ========================== */
+
+        @media (max-width: 900px) {
+
+            .produtos {
+
+                grid-template-columns:
+                    repeat(3, 1fr);
+
+            }
+
+        }
+
+
+        @media (max-width: 650px) {
+
+            .topo {
+
+                padding: 15px;
+
+            }
+
+
+            .logo {
+
+                font-size: 20px;
+
+            }
+
+
+            .banner {
+
+                margin: 15px;
+
+                padding: 35px 20px;
+
+            }
+
+
+            .banner h1 {
+
+                font-size: 25px;
+
+            }
+
+
+            .produtos {
+
+                grid-template-columns:
+                    repeat(2, 1fr);
+
+                gap: 12px;
+
+            }
+
+
+            .container {
+
+                padding:
+                    10px 12px 40px;
+
+            }
+
+
+            .imagem-produto {
+
+                height: 190px;
+
+            }
+
+
+            .informacoes {
+
+                padding: 12px;
+
+            }
+
+
+            .nome-produto {
+
+                font-size: 15px;
+
+            }
+
+
+            .preco {
+
+                font-size: 17px;
+
+            }
+
+
+            .botao-adicionar {
+
+                font-size: 13px;
+
+                padding: 10px;
+
+            }
+
+        }
+
+
+        @media (max-width: 380px) {
+
+            .produtos {
+
+                grid-template-columns: 1fr;
+
+            }
+
+
+            .imagem-produto {
+
+                height: 250px;
+
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+    <!-- =========================
+         CABEÇALHO
+    ========================== -->
+
+    <header>
+
+        <div class="topo">
+       <img src="logo.png" alt="logo marca da empresa" width="100"> 
+
+            <div>
+
+                <div class="logo">
+                    Essência Perfumaria
+                </div>
+
+                <div class="subtitulo">
+                    Perfumes para todos os momentos
+                </div>
+
+            </div>
+
+
+            <button
+                class="botao-carrinho"
+                onclick="abrirCarrinho()">
+
+                🛒 Carrinho
+
+                <span id="quantidadeCarrinho">
+                    0
+                </span>
+
+            </button>
+
+        </div>
+
+    </header>
+
+
+    <!-- =========================
+         BANNER
+    ========================== -->
+
+    <section class="banner">
+
+        <h1>
+            Encontre sua fragrância ✨
+        </h1>
+
+        <p>
+            Escolha seus perfumes favoritos
+            e monte seu pedido.
+        </p>
+
+    </section>
+
+
+    <!-- =========================
+         PESQUISA
+    ========================== -->
+
+    <div class="area-pesquisa">
+
+        <input
+            type="text"
+            id="pesquisa"
+            class="pesquisa"
+            placeholder="🔎 Pesquisar perfume..."
+            oninput="pesquisarProdutos()">
+
+    </div>
+
+
+    <!-- =========================
+         PRODUTOS
+    ========================== -->
+
+    <main class="container">
+
+        <h2 class="titulo-secao">
+            Nossos perfumes
+        </h2>
+
+
+        <div
+            id="produtos"
+            class="produtos">
+        </div>
+
+
+        <div
+            id="semProdutos"
+            class="sem-produtos"
+            style="display:none;">
+
+            Nenhum perfume disponível.
+
+        </div>
+
+    </main>
+
+
+    <!-- =========================
+         FUNDO CARRINHO
+    ========================== -->
+
+    <div
+        id="fundoCarrinho"
+        class="fundo-carrinho"
+        onclick="fecharCarrinho()">
+    </div>
+
+
+    <!-- =========================
+         CARRINHO
+    ========================== -->
+
+    <aside
+        id="carrinho"
+        class="carrinho">
+
+
+        <div class="cabecalho-carrinho">
+
+            <h2>
+                Meu pedido
+            </h2>
+
+
+            <button
+                class="fechar"
+                onclick="fecharCarrinho()">
+
+                ×
+
+            </button>
+
+        </div>
+
+
+        <div
+            id="itensCarrinho"
+            class="itens-carrinho">
+
+            <p
+                style="
+                    text-align:center;
+                    color:#999;
+                ">
+
+                Seu carrinho está vazio.
+
+            </p>
+
+        </div>
+
+
+        <div class="rodape-carrinho">
+
+            <div class="total">
+
+                <span>
+                    Total
+                </span>
+
+
+                <span id="totalCarrinho">
+                    R$ 0,00
+                </span>
+
+            </div>
+
+
+            <button
+                class="botao-finalizar"
+                onclick="finalizarPedido()">
+
+                Finalizar pedido
+
+            </button>
+
+        </div>
+
+    </aside>
+
+
+    <!-- =========================
+         RODAPÉ
+    ========================== -->
+
+    <footer>
+
+        © 2026 Essência Perfumaria
+
+        <br>
+
+        Perfumes e fragrâncias
+
+    </footer>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script>
+
+        /* =========================================
+           CONFIGURAÇÃO DA LOJA ONLINE
+        ========================================== */
+
+        const SUPABASE_URL =
+            "https://hltnkbipjwjlnnbszwks.supabase.co";
+
+        const SUPABASE_CHAVE_PUBLICA =
+            "sb_publishable_t-TXu6PnQANWMdZRS2cDHg_o38BxttG";
+
+        const supabaseCliente =
+            window.supabase.createClient(
+                SUPABASE_URL,
+                SUPABASE_CHAVE_PUBLICA
+            );
+
+        /*
+            TROQUE PELO NÚMERO DA DONA, COM DDD.
+            Exemplo: 86999999999
+        */
+        const WHATSAPP_DONA = "98999764879";
+
+
+        /* =========================================
+           CHAVE COMPARTILHADA COM O ADMIN
+        ========================================== */
+
+        const CHAVE_PRODUTOS =
+            "essencia_produtos";
+
+
+        /* =========================================
+           PRODUTOS
+        ========================================== */
+
+        let produtos = [];
+
+
+        let carrinho = [];
+
+
+        /* =========================================
+           CARREGAR PRODUTOS DO ADMIN
+        ========================================== */
+
+        async function carregarProdutos() {
+
+            try {
+
+                const { data, error } =
+                    await supabaseCliente
+                        .from("produtos")
+                        .select("*")
+                        .order("id", { ascending: false });
+
+                if (error) {
+                    throw error;
+                }
+
+                produtos = data || [];
+
+                mostrarProdutos();
+
+            } catch (erro) {
+
+                console.error(
+                    "Erro ao carregar produtos do Supabase:",
+                    erro
+                );
+
+                produtos = [];
+
+                mostrarProdutos();
+
+                document.getElementById("semProdutos").style.display = "block";
+                document.getElementById("semProdutos").innerHTML =
+                    "Não foi possível carregar os perfumes. Tente atualizar a página.";
+            }
+
+        }
+
+        /* =========================================
+           MOSTRAR PRODUTOS
+        ========================================== */
+
+        function mostrarProdutos(
+            lista = produtos
+        ) {
+
+            const container =
+                document.getElementById(
+                    "produtos"
+                );
+
+
+            const semProdutos =
+                document.getElementById(
+                    "semProdutos"
+                );
+
+
+            container.innerHTML = "";
+
+
+            /*
+                IMPORTANTE:
+
+                Aqui mostramos somente produtos
+                que possuem estoque acima de zero.
+            */
+
+            const disponiveis =
+                lista.filter(
+                    produto =>
+                        Number(produto.estoque) > 0
+                );
+
+
+            if (disponiveis.length === 0) {
+
+                semProdutos.style.display =
+                    "block";
+
+                return;
+
+            }
+
+
+            semProdutos.style.display =
+                "none";
+
+
+            disponiveis.forEach(
+                produto => {
+
+                    const card =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    card.className =
+                        "produto";
+
+
+                    const imagem =
+                        produto.imagem ||
+                        "https://via.placeholder.com/600x600?text=Sem+Foto";
+
+
+                    card.innerHTML = `
+
+                        <img
+                            class="imagem-produto"
+                            src="${imagem}"
+                            alt="${escaparHTML(produto.nome)}"
+                        >
+
+
+                        <div class="informacoes">
+
+                            <div class="nome-produto">
+
+                                ${escaparHTML(
+                                    produto.nome
+                                )}
+
+                            </div>
+
+
+                            <div class="marca-produto">
+
+                                ${escaparHTML(
+                                    produto.marca || ""
+                                )}
+
+                            </div>
+
+
+                            <div class="descricao-produto">
+
+                                ${escaparHTML(
+                                    produto.descricao ||
+                                    "Sem descrição."
+                                )}
+
+                            </div>
+
+
+                            <div class="codigo-produto">
+
+                                Código:
+                                ${escaparHTML(
+                                    produto.sku || "-"
+                                )}
+
+                            </div>
+
+
+                            <div class="preco">
+
+                                R$
+                                ${Number(
+                                    produto.preco
+                                )
+                                    .toFixed(2)
+                                    .replace(
+                                        ".",
+                                        ","
+                                    )}
+
+                            </div>
+
+
+                            <div class="estoque">
+
+                                ${produto.estoque}
+                                unidade(s)
+                                disponível(is)
+
+                            </div>
+
+
+                            <button
+                                class="botao-adicionar"
+                                onclick="
+                                    adicionarCarrinho(
+                                        ${produto.id}
+                                    )
+                                ">
+
+                                🛒 Adicionar ao pedido
+
+                            </button>
+
+                        </div>
+
+                    `;
+
+
+                    container.appendChild(card);
+
+                }
+            );
+
+        }
+
+
+        /* =========================================
+           ADICIONAR AO CARRINHO
+        ========================================== */
+
+        async function adicionarCarrinho(id) {
+
+            /*
+                Recarregamos o estoque diretamente do Supabase
+                antes de adicionar para usar o estoque atual.
+            */
+
+            await carregarProdutos();
+
+            const produto =
+                produtos.find(
+                    p => p.id === id
+                );
+
+
+            if (
+                !produto ||
+                Number(produto.estoque) <= 0
+            ) {
+
+                alert(
+                    "Esse produto está sem estoque."
+                );
+
+                carregarProdutos();
+
+                return;
+
+            }
+
+
+            const item =
+                carrinho.find(
+                    p => p.id === id
+                );
+
+
+            if (item) {
+
+                if (
+                    item.quantidade >=
+                    Number(produto.estoque)
+                ) {
+
+                    alert(
+                        "Você atingiu o limite disponível."
+                    );
+
+                    return;
+
+                }
+
+
+                item.quantidade++;
+
+            } else {
+
+                carrinho.push({
+
+                    id: produto.id,
+
+                    nome: produto.nome,
+
+                    preco:
+                        Number(produto.preco),
+
+                    imagem:
+                        produto.imagem,
+
+                    quantidade: 1
+
+                });
+
+            }
+
+
+            atualizarCarrinho();
+
+            abrirCarrinho();
+
+        }
+
+
+        /* =========================================
+           ATUALIZAR DADOS
+        ========================================== */
+
+        async function carregarDadosAtualizados() {
+
+            try {
+
+                const { data, error } =
+                    await supabaseCliente
+                        .from("produtos")
+                        .select("*")
+                        .order("id", { ascending: false });
+
+                if (error) {
+                    throw error;
+                }
+
+                produtos = data || [];
+
+            } catch (erro) {
+
+                console.error(
+                    "Erro ao atualizar produtos:",
+                    erro
+                );
+
+            }
+
+        }
+
+        /* =========================================
+           ATUALIZAR CARRINHO
+        ========================================== */
+
+        function atualizarCarrinho() {
+
+            const container =
+                document.getElementById(
+                    "itensCarrinho"
+                );
+
+
+            const quantidade =
+                document.getElementById(
+                    "quantidadeCarrinho"
+                );
+
+
+            const totalElemento =
+                document.getElementById(
+                    "totalCarrinho"
+                );
+
+
+            container.innerHTML = "";
+
+
+            if (
+                carrinho.length === 0
+            ) {
+
+                container.innerHTML = `
+
+                    <p
+                        style="
+                            text-align:center;
+                            color:#999;
+                        ">
+
+                        Seu carrinho está vazio.
+
+                    </p>
+
+                `;
+
+
+                quantidade.textContent =
+                    "0";
+
+
+                totalElemento.textContent =
+                    "R$ 0,00";
+
+
+                return;
+
+            }
+
+
+            let quantidadeTotal = 0;
+
+            let valorTotal = 0;
+
+
+            carrinho.forEach(
+                item => {
+
+                    quantidadeTotal +=
+                        item.quantidade;
+
+
+                    valorTotal +=
+                        item.preco *
+                        item.quantidade;
+
+
+                    const div =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    div.className =
+                        "item-carrinho";
+
+
+                    div.innerHTML = `
+
+                        <img
+                            src="${item.imagem ||
+                                "https://via.placeholder.com/100"}"
+                            alt="${escaparHTML(item.nome)}"
+                        >
+
+
+                        <div class="item-info">
+
+                            <div class="item-nome">
+
+                                ${escaparHTML(
+                                    item.nome
+                                )}
+
+                            </div>
+
+
+                            <div class="item-preco">
+
+                                R$
+                                ${item.preco
+                                    .toFixed(2)
+                                    .replace(
+                                        ".",
+                                        ","
+                                    )}
+
+                            </div>
+
+
+                            <div class="controles">
+
+                                <button
+                                    class="controle"
+                                    onclick="
+                                        alterarQuantidade(
+                                            ${item.id},
+                                            -1
+                                        )
+                                    ">
+
+                                    −
+
+                                </button>
+
+
+                                <span>
+                                    ${item.quantidade}
+                                </span>
+
+
+                                <button
+                                    class="controle"
+                                    onclick="
+                                        alterarQuantidade(
+                                            ${item.id},
+                                            1
+                                        )
+                                    ">
+
+                                    +
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    `;
+
+
+                    container.appendChild(div);
+
+                }
+            );
+
+
+            quantidade.textContent =
+                quantidadeTotal;
+
+
+            totalElemento.textContent =
+                "R$ " +
+                valorTotal
+                    .toFixed(2)
+                    .replace(
+                        ".",
+                        ","
+                    );
+
+        }
+
+
+        /* =========================================
+           ALTERAR QUANTIDADE
+        ========================================== */
+
+        async function alterarQuantidade(
+            id,
+            valor
+        ) {
+
+            await carregarDadosAtualizados();
+
+            const item =
+                carrinho.find(
+                    p => p.id === id
+                );
+
+
+            const produto =
+                produtos.find(
+                    p => p.id === id
+                );
+
+
+            if (!item || !produto) {
+
+                return;
+
+            }
+
+
+            item.quantidade += valor;
+
+
+            if (
+                item.quantidade <= 0
+            ) {
+
+                carrinho =
+                    carrinho.filter(
+                        p => p.id !== id
+                    );
+
+            }
+
+
+            if (
+                item.quantidade >
+                Number(produto.estoque)
+            ) {
+
+                item.quantidade =
+                    Number(produto.estoque);
+
+
+                alert(
+                    "Quantidade máxima disponível: " +
+                    produto.estoque
+                );
+
+            }
+
+
+            atualizarCarrinho();
+
+        }
+
+
+        /* =========================================
+           PESQUISAR
+        ========================================== */
+
+        function pesquisarProdutos() {
+
+            carregarDadosAtualizados();
+
+
+            const texto =
+                document
+                    .getElementById(
+                        "pesquisa"
+                    )
+                    .value
+                    .toLowerCase()
+                    .trim();
+
+
+            const filtrados =
+                produtos.filter(
+                    produto => {
+
+                        const nome =
+                            (
+                                produto.nome ||
+                                ""
+                            )
+                                .toLowerCase();
+
+
+                        const marca =
+                            (
+                                produto.marca ||
+                                ""
+                            )
+                                .toLowerCase();
+
+
+                        const sku =
+                            (
+                                produto.sku ||
+                                ""
+                            )
+                                .toLowerCase();
+
+
+                        return (
+                            nome.includes(texto) ||
+                            marca.includes(texto) ||
+                            sku.includes(texto)
+                        );
+
+                    }
+                );
+
+
+            mostrarProdutos(
+                filtrados
+            );
+
+        }
+
+
+        /* =========================================
+           ABRIR CARRINHO
+        ========================================== */
+
+        function abrirCarrinho() {
+
+            document
+                .getElementById(
+                    "carrinho"
+                )
+                .classList.add(
+                    "aberto"
+                );
+
+
+            document
+                .getElementById(
+                    "fundoCarrinho"
+                )
+                .classList.add(
+                    "ativo"
+                );
+
+        }
+
+
+        /* =========================================
+           FECHAR CARRINHO
+        ========================================== */
+
+        function fecharCarrinho() {
+
+            document
+                .getElementById(
+                    "carrinho"
+                )
+                .classList.remove(
+                    "aberto"
+                );
+
+
+            document
+                .getElementById(
+                    "fundoCarrinho"
+                )
+                .classList.remove(
+                    "ativo"
+                );
+
+        }
+
+
+        /* =========================================
+           FINALIZAR PEDIDO
+        ========================================== */
+
+        function finalizarPedido() {
+
+            if (carrinho.length === 0) {
+
+                alert(
+                    "Adicione pelo menos um perfume."
+                );
+
+                return;
+
+            }
+
+            if (
+                !WHATSAPP_DONA ||
+                WHATSAPP_DONA === "COLOQUE_O_NUMERO_AQUI"
+            ) {
+
+                alert(
+                    "O número do WhatsApp da dona ainda não foi configurado."
+                );
+
+                return;
+
+            }
+
+            let mensagem =
+                "Olá! Gostaria de fazer um pedido:%0A%0A";
+
+            carrinho.forEach(item => {
+
+                const subtotal =
+                    item.preco * item.quantidade;
+
+                mensagem +=
+                    "• " +
+                    item.nome +
+                    " — " +
+                    item.quantidade +
+                    " unidade(s) — R$ " +
+                    subtotal
+                        .toFixed(2)
+                        .replace(".", ",") +
+                    "%0A";
+
+            });
+
+            let valorTotal = 0;
+
+            carrinho.forEach(item => {
+
+                valorTotal +=
+                    item.preco *
+                    item.quantidade;
+
+            });
+
+            mensagem +=
+                "%0ATotal: R$ " +
+                valorTotal
+                    .toFixed(2)
+                    .replace(".", ",");
+
+            const url =
+                "https://wa.me/" +
+                WHATSAPP_DONA +
+                "?text=" +
+                mensagem;
+
+            window.open(url, "_blank");
+
+        }
+
+        /* =========================================
+           ESCAPAR HTML
+        ========================================== */
+
+        function escaparHTML(
+            texto
+        ) {
+
+            return String(texto)
+                .replace(
+                    /&/g,
+                    "&amp;"
+                )
+                .replace(
+                    /</g,
+                    "&lt;"
+                )
+                .replace(
+                    />/g,
+                    "&gt;"
+                )
+                .replace(
+                    /"/g,
+                    "&quot;"
+                )
+                .replace(
+                    /'/g,
+                    "&#039;"
+                );
+
+        }
+
+
+        /* =========================================
+           ATUALIZAÇÃO AUTOMÁTICA
+
+           A loja consulta o Supabase quando é aberta
+           e também ao verificar o estoque.
+        ========================================== */
+
+
+        /* =========================================
+           INICIAR
+        ========================================== */
+
+        carregarProdutos();
+
+        atualizarCarrinho();
+
+    </script>
+
+</body>
+
+</html>
+```
