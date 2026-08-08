@@ -1134,6 +1134,15 @@
 
                 produtos = data || [];
 
+                try {
+                    localStorage.setItem(
+                        "essencia_produtos_cache",
+                        JSON.stringify(produtos)
+                    );
+                } catch (cacheErro) {
+                    console.warn("Não foi possível salvar o cache:", cacheErro);
+                }
+
                 mostrarProdutos();
 
             } catch (erro) {
@@ -1624,12 +1633,10 @@
            ALTERAR QUANTIDADE
         ========================================== */
 
-        async function alterarQuantidade(
+        function alterarQuantidade(
             id,
             valor
         ) {
-
-            await carregarDadosAtualizados();
 
             const item =
                 carrinho.find(
@@ -1819,10 +1826,7 @@
 
             }
 
-            if (
-                !WHATSAPP_DONA ||
-                WHATSAPP_DONA === "98999764879"
-            ) {
+            if (!WHATSAPP_DONA) {
 
                 alert(
                     "O número do WhatsApp da dona ainda não foi configurado."
@@ -1923,6 +1927,20 @@
         /* =========================================
            INICIAR
         ========================================== */
+
+        // Mostra rapidamente os produtos já conhecidos e atualiza o banco em segundo plano.
+        try {
+            const cache = localStorage.getItem("essencia_produtos_cache");
+            if (cache) {
+                const produtosCache = JSON.parse(cache);
+                if (Array.isArray(produtosCache) && produtosCache.length) {
+                    produtos = produtosCache;
+                    mostrarProdutos();
+                }
+            }
+        } catch (cacheErro) {
+            console.warn("Cache indisponível:", cacheErro);
+        }
 
         carregarProdutos();
 
