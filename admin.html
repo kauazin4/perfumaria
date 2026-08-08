@@ -119,7 +119,8 @@
         }
 
         input,
-        textarea {
+        textarea,
+        select {
             border: 1px solid #e6ccd6;
             border-radius: 10px;
             padding: 12px;
@@ -129,7 +130,8 @@
         }
 
         input:focus,
-        textarea:focus {
+        textarea:focus,
+        select:focus {
             border-color: #d85b86;
         }
 
@@ -336,6 +338,145 @@
         }
 
         /* =========================
+           PAINEL GERENCIAL
+        ========================== */
+        .gerencial-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .gerencial-card {
+            background: white;
+            border: 1px solid #f1d2de;
+            border-radius: 15px;
+            padding: 18px;
+            box-shadow: 0 5px 15px rgba(216, 91, 134, 0.05);
+        }
+
+        .gerencial-card span {
+            display: block;
+            color: #777;
+            font-size: 13px;
+        }
+
+        .gerencial-card strong {
+            display: block;
+            color: #b83f6b;
+            font-size: 25px;
+            margin-top: 7px;
+        }
+
+        .gerencial-card small {
+            display: block;
+            color: #999;
+            margin-top: 5px;
+        }
+
+        .gerencial-secao {
+            background: white;
+            border: 1px solid #f1d2de;
+            border-radius: 18px;
+            padding: 22px;
+            margin-bottom: 25px;
+        }
+
+        .gerencial-secao h2 {
+            color: #c94e78;
+            margin-bottom: 15px;
+            font-size: 19px;
+        }
+
+        .lista-gerencial {
+            display: grid;
+            gap: 9px;
+        }
+
+        .item-gerencial {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center;
+            padding: 11px 13px;
+            background: #fff8fb;
+            border-radius: 10px;
+            font-size: 14px;
+        }
+
+        .item-gerencial strong {
+            color: #b83f6b;
+        }
+
+        .alerta-estoque {
+            color: #b45309;
+            font-weight: bold;
+        }
+
+        .sem-alertas {
+            color: #777;
+            font-size: 14px;
+            padding: 8px 0;
+        }
+
+        .badge-promocao {
+            display: inline-block;
+            background: #d85b86;
+            color: white;
+            padding: 5px 9px;
+            border-radius: 999px;
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 8px;
+        }
+
+        .preco-promocao {
+            color: #b83f6b;
+            font-size: 20px;
+            font-weight: bold;
+        }
+
+        .preco-antigo {
+            color: #999;
+            text-decoration: line-through;
+            margin-right: 7px;
+            font-size: 13px;
+        }
+
+        .promocao-form {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr auto;
+            gap: 12px;
+            align-items: end;
+        }
+
+        .promocoes-lista {
+            margin-top: 18px;
+            display: grid;
+            gap: 10px;
+        }
+
+        .promocao-item {
+            border: 1px solid #f1d2de;
+            border-radius: 12px;
+            padding: 13px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .botao-desativar {
+            border: none;
+            background: #ffe1e1;
+            color: #b22;
+            padding: 9px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        /* =========================
            RESPONSIVO
         ========================== */
 
@@ -392,8 +533,18 @@
                 height: 180px;
             }
 
-            .estatisticas {
+            .estatisticas,
+            .gerencial-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .promocao-form {
+                grid-template-columns: 1fr;
+            }
+
+            .promocao-item {
+                flex-direction: column;
+                align-items: flex-start;
             }
 
             .acoes {
@@ -602,6 +753,71 @@
 
         </section>
 
+
+        <!-- =========================
+             RESUMO GERENCIAL
+        ========================== -->
+        <section class="gerencial-grid">
+            <div class="gerencial-card">
+                <span>💰 Caixa registrado</span>
+                <strong id="valorCaixa">R$ 0,00</strong>
+                <small>Vendas registradas no sistema</small>
+            </div>
+
+            <div class="gerencial-card">
+                <span>📦 Valor do estoque</span>
+                <strong id="valorEstoque">R$ 0,00</strong>
+                <small>Preço normal × quantidade</small>
+            </div>
+
+            <div class="gerencial-card">
+                <span>⚠️ Estoque baixo</span>
+                <strong id="totalEstoqueBaixo">0</strong>
+                <small>5 unidades ou menos</small>
+            </div>
+</section>
+
+        <section class="gerencial-secao">
+            <h2>🏆 Produtos mais vendidos</h2>
+            <div id="maisVendidos" class="lista-gerencial">
+                <div class="sem-alertas">Nenhuma venda registrada ainda.</div>
+            </div>
+        </section>
+
+        <section class="gerencial-secao">
+            <h2>⚠️ Produtos com estoque baixo</h2>
+            <div id="estoqueBaixo" class="lista-gerencial">
+                <div class="sem-alertas">Nenhum produto com estoque baixo.</div>
+            </div>
+        </section>
+
+        <section class="gerencial-secao" id="secaoPromocoes">
+            <h2>🔥 Criar promoção</h2>
+            <form id="formPromocao" class="promocao-form">
+                <div class="campo">
+                    <label for="produtoPromocao">Produto *</label>
+                    <select id="produtoPromocao" required>
+                        <option value="">Selecione o produto</option>
+                    </select>
+                </div>
+
+                <div class="campo">
+                    <label for="precoPromocional">Novo preço *</label>
+                    <input type="number" id="precoPromocional" min="0" step="0.01" placeholder="0,00" required>
+                </div>
+
+                <div class="campo">
+                    <label for="diasPromocao">Dias *</label>
+                    <input type="number" id="diasPromocao" min="1" step="1" placeholder="Ex.: 7" required>
+                </div>
+
+                <button type="submit" class="botao-principal" id="botaoPromocao">Criar promoção</button>
+            </form>
+
+            <div id="listaPromocoes" class="promocoes-lista">
+                <div class="sem-alertas">Nenhuma promoção cadastrada.</div>
+            </div>
+        </section>
 
         <!-- =========================
              CADASTRO
@@ -817,6 +1033,9 @@
 
         let produtos = [];
         let editandoId = null;
+        let promocoes = [];
+        let vendas = [];
+        const ESTOQUE_BAIXO_LIMITE = 5;
 
         /* =========================================================
            LOGIN
@@ -845,6 +1064,7 @@
             telaLogin.style.display = "none";
             painel.style.display = "block";
             await carregarProdutos();
+            await carregarDadosGerenciais();
         }
 
         formLogin.addEventListener("submit", async function(event) {
@@ -916,6 +1136,10 @@
             }
 
             atualizarTudo();
+            if (document.getElementById("produtoPromocao")) {
+                preencherProdutosPromocao();
+                mostrarPromocoes();
+            }
         }
 
         /* =========================================================
@@ -1082,7 +1306,16 @@
                         <div class="marca">${escaparHTML(produto.marca)}</div>
                         <div class="descricao">${escaparHTML(produto.descricao || "Sem descrição.")}</div>
                         <div class="codigo">SKU: ${escaparHTML(produto.sku)}</div>
-                        <div class="preco">R$ ${Number(produto.preco).toFixed(2).replace(".", ",")}</div>
+                        ${(() => {
+                            const promo = obterPromocaoAtiva(produto.id);
+                            if (promo) {
+                                return `
+                                    <div class="badge-promocao">🔥 PROMOÇÃO</div>
+                                    <div><span class="preco-antigo">R$ ${Number(produto.preco).toFixed(2).replace(".", ",")}</span> <span class="preco-promocao">R$ ${Number(promo.preco_promocional).toFixed(2).replace(".", ",")}</span></div>
+                                `;
+                            }
+                            return `<div class="preco">R$ ${Number(produto.preco).toFixed(2).replace(".", ",")}</div>`;
+                        })()}
                         <div class="estoque">
                             <span>Estoque</span>
                             <strong class="${estoqueClasse}">${statusEstoque}</strong>
@@ -1183,6 +1416,247 @@
         }
 
         /* =========================================================
+           PROMOÇÕES E INDICADORES GERENCIAIS
+        ========================================================== */
+        async function carregarDadosGerenciais() {
+            try {
+                const resultadoPromocoes = await banco
+                    .from("promocoes")
+                    .select("*")
+                    .order("criado_em", { ascending: false });
+
+                if (resultadoPromocoes.error) throw resultadoPromocoes.error;
+                promocoes = resultadoPromocoes.data || [];
+            } catch (erro) {
+                console.error("Erro ao carregar promoções:", erro);
+                promocoes = [];
+            }
+
+            try {
+                const resultadoVendas = await banco
+                    .from("vendas")
+                    .select("*")
+                    .order("data_venda", { ascending: false });
+
+                if (resultadoVendas.error) throw resultadoVendas.error;
+                vendas = resultadoVendas.data || [];
+            } catch (erro) {
+                console.error("Erro ao carregar vendas:", erro);
+                vendas = [];
+            }
+
+            atualizarPainelGerencial();
+            preencherProdutosPromocao();
+            mostrarPromocoes();
+        }
+
+        function obterPromocaoAtiva(produtoId) {
+            const agora = Date.now();
+            return promocoes.find(p =>
+                String(p.produto_id) === String(produtoId) &&
+                p.ativa === true &&
+                new Date(p.inicio).getTime() <= agora &&
+                new Date(p.fim).getTime() > agora
+            ) || null;
+        }
+
+        function atualizarPainelGerencial() {
+            const valorEstoque = produtos.reduce((total, produto) =>
+                total + (Number(produto.preco) || 0) * (Number(produto.estoque) || 0), 0);
+
+            const valorCaixa = vendas.reduce((total, venda) =>
+                total + (Number(venda.preco_total) || 0), 0);
+
+            const baixos = produtos.filter(p =>
+                Number(p.estoque) >= 0 && Number(p.estoque) <= ESTOQUE_BAIXO_LIMITE
+            );
+
+            document.getElementById("valorEstoque").textContent = formatarMoeda(valorEstoque);
+            document.getElementById("valorCaixa").textContent = formatarMoeda(valorCaixa);
+            document.getElementById("totalEstoqueBaixo").textContent = baixos.length;
+
+            const ranking = {};
+            vendas.forEach(venda => {
+                const nome = venda.produto_nome || "Produto sem nome";
+                ranking[nome] = (ranking[nome] || 0) + (Number(venda.quantidade) || 0);
+            });
+
+            const rankingOrdenado = Object.entries(ranking)
+                .sort((a, b) => b[1] - a[1])
+                .slice(0, 5);
+
+            const rankingEl = document.getElementById("maisVendidos");
+            if (!rankingOrdenado.length) {
+                rankingEl.innerHTML = '<div class="sem-alertas">Nenhuma venda registrada ainda.</div>';
+            } else {
+                rankingEl.innerHTML = rankingOrdenado.map(([nome, quantidade], index) => `
+                    <div class="item-gerencial">
+                        <span>${index + 1}. ${escaparHTML(nome)}</span>
+                        <strong>${quantidade} unidade(s)</strong>
+                    </div>
+                `).join("");
+            }
+
+            const estoqueEl = document.getElementById("estoqueBaixo");
+            if (!baixos.length) {
+                estoqueEl.innerHTML = '<div class="sem-alertas">Nenhum produto com estoque baixo.</div>';
+            } else {
+                estoqueEl.innerHTML = baixos
+                    .sort((a, b) => Number(a.estoque) - Number(b.estoque))
+                    .map(produto => `
+                        <div class="item-gerencial">
+                            <span>${escaparHTML(produto.nome || "Produto")}</span>
+                            <strong class="alerta-estoque">${Number(produto.estoque) === 0 ? "Sem estoque" : Number(produto.estoque) + " unidade(s)"}</strong>
+                        </div>
+                    `).join("");
+            }
+        }
+
+        function formatarMoeda(valor) {
+            return Number(valor || 0).toLocaleString("pt-BR", {
+                style: "currency",
+                currency: "BRL"
+            });
+        }
+
+        function preencherProdutosPromocao() {
+            const select = document.getElementById("produtoPromocao");
+            if (!select) return;
+
+            const valorAtual = select.value;
+            select.innerHTML = '<option value="">Selecione o produto</option>' +
+                produtos.map(produto =>
+                    `<option value="${String(produto.id)}">${escaparHTML(produto.nome)} — R$ ${Number(produto.preco || 0).toFixed(2).replace(".", ",")}</option>`
+                ).join("");
+
+            if ([...select.options].some(o => o.value === valorAtual)) {
+                select.value = valorAtual;
+            }
+        }
+
+        function mostrarPromocoes() {
+            const container = document.getElementById("listaPromocoes");
+            if (!container) return;
+
+            const agora = Date.now();
+            const lista = promocoes.filter(p => p.ativa === true);
+
+            if (!lista.length) {
+                container.innerHTML = '<div class="sem-alertas">Nenhuma promoção cadastrada.</div>';
+                return;
+            }
+
+            container.innerHTML = lista.map(promo => {
+                const produto = produtos.find(p => String(p.id) === String(promo.produto_id));
+                const nome = produto ? produto.nome : (promo.produto_nome || "Produto");
+                const expirou = new Date(promo.fim).getTime() <= agora;
+                const fim = new Date(promo.fim).toLocaleString("pt-BR", {
+                    dateStyle: "short",
+                    timeStyle: "short"
+                });
+
+                return `
+                    <div class="promocao-item">
+                        <div>
+                            <strong>${escaparHTML(nome)}</strong><br>
+                            <span>R$ ${Number(promo.preco_promocional).toFixed(2).replace(".", ",")} até ${fim}</span>
+                            ${expirou ? '<br><small style="color:#b22;font-weight:bold;">Promoção encerrada</small>' : ''}
+                        </div>
+                        <button class="botao-desativar" onclick="desativarPromocao('${String(promo.id)}')">
+                            ${expirou ? "Arquivar" : "Encerrar"}
+                        </button>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        document.getElementById("formPromocao").addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const produtoId = document.getElementById("produtoPromocao").value;
+            const precoPromocional = parseFloat(document.getElementById("precoPromocional").value);
+            const dias = parseInt(document.getElementById("diasPromocao").value, 10);
+            const botao = document.getElementById("botaoPromocao");
+            const produto = produtos.find(p => String(p.id) === String(produtoId));
+
+            if (!produto) {
+                alert("Selecione um produto.");
+                return;
+            }
+            if (!Number.isFinite(precoPromocional) || precoPromocional < 0) {
+                alert("Digite um preço promocional válido.");
+                return;
+            }
+            if (!Number.isInteger(dias) || dias < 1) {
+                alert("Digite uma quantidade de dias válida.");
+                return;
+            }
+            if (precoPromocional >= Number(produto.preco)) {
+                alert("O preço promocional precisa ser menor que o preço normal.");
+                return;
+            }
+
+            botao.disabled = true;
+            botao.textContent = "Salvando...";
+
+            try {
+                const agora = new Date();
+                const fim = new Date(agora.getTime() + dias * 24 * 60 * 60 * 1000);
+
+                const desativar = await banco
+                    .from("promocoes")
+                    .update({ ativa: false })
+                    .eq("produto_id", String(produtoId))
+                    .eq("ativa", true);
+
+                if (desativar.error) throw desativar.error;
+
+                const resultado = await banco
+                    .from("promocoes")
+                    .insert({
+                        produto_id: String(produtoId),
+                        preco_promocional: precoPromocional,
+                        inicio: agora.toISOString(),
+                        fim: fim.toISOString(),
+                        ativa: true
+                    })
+                    .select()
+                    .single();
+
+                if (resultado.error) throw resultado.error;
+
+                alert("Promoção criada com sucesso!");
+                this.reset();
+                await carregarDadosGerenciais();
+                mostrarProdutos();
+            } catch (erro) {
+                console.error("Erro ao criar promoção:", erro);
+                alert("Não foi possível criar a promoção. Verifique as permissões da tabela promocoes no Supabase.");
+            } finally {
+                botao.disabled = false;
+                botao.textContent = "Criar promoção";
+            }
+        });
+
+        async function desativarPromocao(id) {
+            if (!confirm("Deseja encerrar esta promoção?")) return;
+
+            const { error } = await banco
+                .from("promocoes")
+                .update({ ativa: false })
+                .eq("id", id);
+
+            if (error) {
+                console.error("Erro ao encerrar promoção:", error);
+                alert("Não foi possível encerrar a promoção.");
+                return;
+            }
+
+            await carregarDadosGerenciais();
+            mostrarProdutos();
+        }
+
+        /* =========================================================
            ESTATÍSTICAS
         ========================================================== */
         function atualizarEstatisticas() {
@@ -1198,6 +1672,9 @@
         function atualizarTudo() {
             mostrarProdutos();
             atualizarEstatisticas();
+            if (document.getElementById("valorEstoque")) {
+                atualizarPainelGerencial();
+            }
         }
 
         function escaparHTML(texto) {
