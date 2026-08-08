@@ -1134,15 +1134,6 @@
 
                 produtos = data || [];
 
-                try {
-                    localStorage.setItem(
-                        "essencia_produtos_cache",
-                        JSON.stringify(produtos)
-                    );
-                } catch (cacheErro) {
-                    console.warn("Não foi possível salvar o cache:", cacheErro);
-                }
-
                 mostrarProdutos();
 
             } catch (erro) {
@@ -1633,10 +1624,12 @@
            ALTERAR QUANTIDADE
         ========================================== */
 
-        function alterarQuantidade(
+        async function alterarQuantidade(
             id,
             valor
         ) {
+
+            await carregarDadosAtualizados();
 
             const item =
                 carrinho.find(
@@ -1814,73 +1807,83 @@
            FINALIZAR PEDIDO
         ========================================== */
 
-        function finalizarPedido() {
+        async function finalizarPedido() {
 
             if (carrinho.length === 0) {
-
-                alert(
-                    "Adicione pelo menos um perfume."
-                );
-
+                alert("Adicione pelo menos um perfume.");
                 return;
-
             }
 
             if (!WHATSAPP_DONA) {
-
-                alert(
-                    "O número do WhatsApp da dona ainda não foi configurado."
-                );
-
+                alert("O número do WhatsApp da dona ainda não foi configurado.");
                 return;
-
             }
 
-            let mensagem =
-                "Olá! Gostaria de fazer um pedido:%0A%0A";
-
-            carrinho.forEach(item => {
-
-                const subtotal =
-                    item.preco * item.quantidade;
-
-                mensagem +=
-                    "• " +
-                    item.nome +
-                    " — " +
-                    item.quantidade +
-                    " unidade(s) — R$ " +
-                    subtotal
-                        .toFixed(2)
-                        .replace(".", ",") +
-                    "%0A";
-
-            });
-
+            let mensagem = "Olá! Gostaria de fazer um pedido:%0A%0A";
             let valorTotal = 0;
 
             carrinho.forEach(item => {
-
-                valorTotal +=
-                    item.preco *
-                    item.quantidade;
-
+                const subtotal = Number(item.preco) * Number(item.quantidade);
+                valorTotal += subtotal;
+                mensagem += "• " + item.nome + " — " + item.quantidade +
+                    " unidade(s) — R$ " + subtotal.toFixed(2).replace(".", ",") + "%0A";
             });
 
-            mensagem +=
-                "%0ATotal: R$ " +
-                valorTotal
-                    .toFixed(2)
-                    .replace(".", ",");
+            mensagem += "%0ATotal: R$ " + valorTotal.toFixed(2).replace(".", ",");
 
-            const url =
-                "https://wa.me/" +
-                WHATSAPP_DONA +
-                "?text=" +
-                mensagem;
+            const url = "https://wa.me/" + WHATSAPP_DONA + "?text=" + mensagem;
 
+            // Abre o WhatsApp imediatamente. A atualização do estoque acontece em seguida.
             window.open(url, "_blank");
 
+            try {
+                for (const item of carrinho) {
+                    const produtoAtual = produtos.find(p => p.id === item.id);
+                    const estoqueAtual = Number(produtoAtual?.estoque ?? 0);
+                    const quantidadeVendida = Number(item.quantidade);
+
+                    if (!produtoAtual || estoqueAtual < quantidadeVendida) {
+                        console.warn("Estoque insuficiente ou produto não encontrado:", item.nome);
+                        continue;
+                    }
+
+                    const novoEstoque = estoqueAtual - quantidadeVendida;
+
+                    const { error: erroEstoque } = await supabaseCliente
+                        .from("produtos")
+                        .update({ estoque: novoEstoque })
+                        .eq("id", item.id);
+
+                    if (erroEstoque) {
+                        console.error("Erro ao baixar estoque de", item.nome, erroEstoque);
+                        continue;
+                    }
+
+                    const { error: erroVenda } = await supabaseCliente
+                        .from("vendas")
+                        .insert({
+                            produto_id: String(item.id),
+                            produto_nome: item.nome,
+                            quantidade: quantidadeVendida,
+                            preco_unitario: Number(item.preco),
+                            preco_total: Number(item.preco) * quantidadeVendida
+                        });
+
+                    if (erroVenda) {
+                        console.error("Erro ao registrar venda de", item.nome, erroVenda);
+                    }
+
+                    produtoAtual.estoque = novoEstoque;
+                }
+
+                carrinho = [];
+                atualizarCarrinho();
+                mostrarProdutos();
+
+            } catch (erro) {
+                console.error("Erro ao finalizar pedido e atualizar estoque:", erro);
+                alert("O pedido foi enviado ao WhatsApp, mas houve um problema ao atualizar o estoque. Verifique o painel da dona.");
+            }
         }
 
         /* =========================================
@@ -1927,20 +1930,6 @@
         /* =========================================
            INICIAR
         ========================================== */
-
-        // Mostra rapidamente os produtos já conhecidos e atualiza o banco em segundo plano.
-        try {
-            const cache = localStorage.getItem("essencia_produtos_cache");
-            if (cache) {
-                const produtosCache = JSON.parse(cache);
-                if (Array.isArray(produtosCache) && produtosCache.length) {
-                    produtos = produtosCache;
-                    mostrarProdutos();
-                }
-            }
-        } catch (cacheErro) {
-            console.warn("Cache indisponível:", cacheErro);
-        }
 
         carregarProdutos();
 
