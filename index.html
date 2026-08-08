@@ -1693,9 +1693,8 @@
 
         function pesquisarProdutos() {
 
-            carregarDadosAtualizados();
-
-
+            // A pesquisa usa os produtos que já estão em memória.
+            // Não consulta o Supabase a cada tecla digitada.
             const texto =
                 document
                     .getElementById(
@@ -1819,6 +1818,7 @@
                 return;
             }
 
+            // Monta a mensagem usando o preço que está na memória.
             let mensagem = "Olá! Gostaria de fazer um pedido:%0A%0A";
             let valorTotal = 0;
 
@@ -1830,60 +1830,45 @@
             });
 
             mensagem += "%0ATotal: R$ " + valorTotal.toFixed(2).replace(".", ",");
-
             const url = "https://wa.me/" + WHATSAPP_DONA + "?text=" + mensagem;
 
-            // Abre o WhatsApp imediatamente. A atualização do estoque acontece em seguida.
-            window.open(url, "_blank");
+            // O estoque NÃO é atualizado diretamente pelo navegador.
+            // O RPC faz a baixa de forma segura e atômica no Supabase.
+            const itensVenda = carrinho.map(item => ({
+                id: String(item.id),
+                quantidade: Number(item.quantidade)
+            }));
 
-            try {
-                for (const item of carrinho) {
-                    const produtoAtual = produtos.find(p => p.id === item.id);
-                    const estoqueAtual = Number(produtoAtual?.estoque ?? 0);
-                    const quantidadeVendida = Number(item.quantidade);
+            const { data, error } = await supabaseCliente.rpc(
+                "finalizar_pedido",
+                { itens: itensVenda }
+            );
 
-                    if (!produtoAtual || estoqueAtual < quantidadeVendida) {
-                        console.warn("Estoque insuficiente ou produto não encontrado:", item.nome);
-                        continue;
-                    }
-
-                    const novoEstoque = estoqueAtual - quantidadeVendida;
-
-                    const { error: erroEstoque } = await supabaseCliente
-                        .from("produtos")
-                        .update({ estoque: novoEstoque })
-                        .eq("id", item.id);
-
-                    if (erroEstoque) {
-                        console.error("Erro ao baixar estoque de", item.nome, erroEstoque);
-                        continue;
-                    }
-
-                    const { error: erroVenda } = await supabaseCliente
-                        .from("vendas")
-                        .insert({
-                            produto_id: String(item.id),
-                            produto_nome: item.nome,
-                            quantidade: quantidadeVendida,
-                            preco_unitario: Number(item.preco),
-                            preco_total: Number(item.preco) * quantidadeVendida
-                        });
-
-                    if (erroVenda) {
-                        console.error("Erro ao registrar venda de", item.nome, erroVenda);
-                    }
-
-                    produtoAtual.estoque = novoEstoque;
-                }
-
-                carrinho = [];
-                atualizarCarrinho();
-                mostrarProdutos();
-
-            } catch (erro) {
-                console.error("Erro ao finalizar pedido e atualizar estoque:", erro);
-                alert("O pedido foi enviado ao WhatsApp, mas houve um problema ao atualizar o estoque. Verifique o painel da dona.");
+            if (error) {
+                console.error("Erro ao registrar pedido no Supabase:", error);
+                alert("Não foi possível registrar o pedido no estoque. O WhatsApp não será aberto para evitar uma venda sem baixa no estoque.");
+                return;
             }
+
+            if (data && data.sucesso === false) {
+                alert(data.mensagem || "Não foi possível concluir o pedido.");
+                return;
+            }
+
+            // Atualiza a cópia local imediatamente.
+            carrinho.forEach(item => {
+                const produto = produtos.find(p => String(p.id) === String(item.id));
+                if (produto) {
+                    produto.estoque = Number(produto.estoque) - Number(item.quantidade);
+                }
+            });
+
+            carrinho = [];
+            atualizarCarrinho();
+            mostrarProdutos();
+
+            // Só abre o WhatsApp depois que a venda foi registrada.
+            window.open(url, "_blank");
         }
 
         /* =========================================
@@ -1932,8 +1917,13 @@
         ========================================== */
 
         carregarProdutos();
-
+        configurarLogoEmpresa();
         atualizarCarrinho();
+
+        // Atualiza o estoque em segundo plano sem travar a interface.
+        setInterval(() => {
+            carregarDadosAtualizados().then(() => mostrarProdutos());
+        }, 30000);
 
     </script>
 
