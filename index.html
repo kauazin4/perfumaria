@@ -61,7 +61,23 @@
             gap: 20px;
 
         }
+        .identidade-loja {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 0;
+        }
 
+        .logo-empresa {
+            width: 48px;
+            height: 48px;
+            object-fit: contain;
+            border-radius: 10px;
+            display: block;
+            background: #fff;
+            border: 1px solid #f3d6e1;
+            flex-shrink: 0;
+        }
 
         .logo {
 
@@ -717,7 +733,10 @@
                 padding: 15px;
 
             }
-
+            .logo-empresa {
+                width: 40px;
+                height: 40px;
+            }
 
             .logo {
 
@@ -816,12 +835,7 @@
 
         }
 
-    
-        .promo-badge { position:absolute; top:12px; left:12px; background:#d85b86; color:#fff; padding:7px 11px; border-radius:20px; font-weight:bold; font-size:12px; z-index:2; }
-        .preco-normal { color:#999; text-decoration:line-through; font-size:13px; margin-bottom:3px; }
-        .produto { position:relative; }
-        .preco-promocional { color:#d04f7d; font-size:20px; font-weight:bold; margin-bottom:8px; }
-</style>
+    </style>
 
 </head>
 
@@ -837,16 +851,22 @@
 
         <div class="topo">
 
-            <div>
-
-                <div class="logo">
-                    Essência Perfumaria
+            <div class="identidade-loja">
+                <img
+                    id="logoEmpresa"
+                    class="logo-empresa"
+                    src="logo.png"
+                    alt="Logo da empresa"
+                    style="display:none;"
+                >
+                <div>
+                    <div class="logo">
+                        Essência Perfumaria
+                    </div>
+                    <div class="subtitulo">
+                        Perfumes para todos os momentos
+                    </div>
                 </div>
-
-                <div class="subtitulo">
-                    Perfumes para todos os momentos
-                </div>
-
             </div>
 
 
@@ -1049,23 +1069,31 @@
                 SUPABASE_CHAVE_PUBLICA
             );
 
-        async function obterPromocoesAtivas() {
-            const agora = new Date().toISOString();
-            const { data, error } = await supabaseCliente
-                .from("promocoes")
-                .select("*")
-                .eq("ativa", true)
-                .lte("inicio", agora)
-                .gte("fim", agora);
-            if (error) { console.warn("Não foi possível carregar promoções:", error); return []; }
-            return data || [];
-        }
-
         /*
             TROQUE PELO NÚMERO DA DONA, COM DDD.
             Exemplo: 86999999999
         */
-        const WHATSAPP_DONA = "COLOQUE_O_NUMERO_AQUI";
+        const WHATSAPP_DONA = "98999764879";
+
+        /*
+            LOGO DA EMPRESA:
+            Cole aqui o endereço da imagem da logo.
+            Se deixar vazio, somente o nome da empresa será mostrado.
+        */
+        const LOGO_EMPRESA = "";
+
+        function configurarLogoEmpresa() {
+            const logo = document.getElementById("logoEmpresa");
+
+            if (!logo || !LOGO_EMPRESA.trim()) return;
+
+            logo.src = LOGO_EMPRESA.trim();
+            logo.style.display = "block";
+
+            logo.onerror = function() {
+                logo.style.display = "none";
+            };
+        }
 
 
         /* =========================================
@@ -1130,49 +1158,180 @@
            MOSTRAR PRODUTOS
         ========================================== */
 
-        async function mostrarProdutos(lista = produtos) {
-            const container = document.getElementById("produtos");
-            const semProdutos = document.getElementById("semProdutos");
+        function mostrarProdutos(
+            lista = produtos
+        ) {
+
+            const container =
+                document.getElementById(
+                    "produtos"
+                );
+
+
+            const semProdutos =
+                document.getElementById(
+                    "semProdutos"
+                );
+
+
             container.innerHTML = "";
-            const disponiveis = lista.filter(produto => Number(produto.estoque) > 0);
-            if (disponiveis.length === 0) { semProdutos.style.display = "block"; return; }
-            semProdutos.style.display = "none";
-            const promocoes = await obterPromocoesAtivas();
-            disponiveis.forEach(produto => {
-                const promo = promocoes.find(p => String(p.produto_id) === String(produto.id));
-                const precoNormal = Number(produto.preco);
-                const precoAtual = promo ? Number(promo.preco_promocional) : precoNormal;
-                const card = document.createElement("div");
-                card.className = "produto";
-                const imagem = produto.imagem || "https://via.placeholder.com/600x600?text=Sem+Foto";
-                card.innerHTML = `
-                    ${promo ? '<div class="promo-badge">🔥 PROMOÇÃO</div>' : ''}
-                    <img class="imagem-produto" src="${imagem}" alt="${escaparHTML(produto.nome)}">
-                    <div class="informacoes">
-                        <div class="nome-produto">${escaparHTML(produto.nome)}</div>
-                        <div class="marca-produto">${escaparHTML(produto.marca || "")}</div>
-                        <div class="descricao-produto">${escaparHTML(produto.descricao || "Sem descrição.")}</div>
-                        <div class="codigo-produto">Código: ${escaparHTML(produto.sku || "-")}</div>
-                        ${promo ? `<div class="preco-normal">R$ ${precoNormal.toFixed(2).replace(".", ",")}</div><div class="preco-promocional">R$ ${precoAtual.toFixed(2).replace(".", ",")}</div>` : `<div class="preco">R$ ${precoAtual.toFixed(2).replace(".", ",")}</div>`}
-                        <div class="estoque">${produto.estoque} unidade(s) disponível(is)</div>
-                        <button class="botao-adicionar" onclick="adicionarCarrinho(${produto.id})">🛒 Adicionar ao pedido</button>
-                    </div>`;
-                container.appendChild(card);
-            });
+
+
+            /*
+                IMPORTANTE:
+
+                Aqui mostramos somente produtos
+                que possuem estoque acima de zero.
+            */
+
+            const disponiveis =
+                lista.filter(
+                    produto =>
+                        Number(produto.estoque) > 0
+                );
+
+
+            if (disponiveis.length === 0) {
+
+                semProdutos.style.display =
+                    "block";
+
+                return;
+
+            }
+
+
+            semProdutos.style.display =
+                "none";
+
+
+            disponiveis.forEach(
+                produto => {
+
+                    const card =
+                        document.createElement(
+                            "div"
+                        );
+
+
+                    card.className =
+                        "produto";
+
+
+                    const imagem =
+                        produto.imagem ||
+                        "https://via.placeholder.com/600x600?text=Sem+Foto";
+
+
+                    card.innerHTML = `
+
+                        <img
+                            class="imagem-produto"
+                            src="${imagem}"
+                            alt="${escaparHTML(produto.nome)}"
+                        >
+
+
+                        <div class="informacoes">
+
+                            <div class="nome-produto">
+
+                                ${escaparHTML(
+                                    produto.nome
+                                )}
+
+                            </div>
+
+
+                            <div class="marca-produto">
+
+                                ${escaparHTML(
+                                    produto.marca || ""
+                                )}
+
+                            </div>
+
+
+                            <div class="descricao-produto">
+
+                                ${escaparHTML(
+                                    produto.descricao ||
+                                    "Sem descrição."
+                                )}
+
+                            </div>
+
+
+                            <div class="codigo-produto">
+
+                                Código:
+                                ${escaparHTML(
+                                    produto.sku || "-"
+                                )}
+
+                            </div>
+
+
+                            <div class="preco">
+
+                                R$
+                                ${Number(
+                                    produto.preco
+                                )
+                                    .toFixed(2)
+                                    .replace(
+                                        ".",
+                                        ","
+                                    )}
+
+                            </div>
+
+
+                            <div class="estoque">
+
+                                ${produto.estoque}
+                                unidade(s)
+                                disponível(is)
+
+                            </div>
+
+
+                            <button
+                                class="botao-adicionar"
+                                onclick="
+                                    adicionarCarrinho(
+                                        ${produto.id}
+                                    )
+                                ">
+
+                                🛒 Adicionar ao pedido
+
+                            </button>
+
+                        </div>
+
+                    `;
+
+
+                    container.appendChild(card);
+
+                }
+            );
+
         }
+
 
         /* =========================================
            ADICIONAR AO CARRINHO
         ========================================== */
 
-        async function adicionarCarrinho(id) {
+        function adicionarCarrinho(id) {
 
             /*
-                Recarregamos o estoque diretamente do Supabase
-                antes de adicionar para usar o estoque atual.
+                Usa os produtos que já estão em memória.
+                Isso deixa o botão instantâneo e evita uma
+                nova consulta ao Supabase a cada clique.
             */
-
-            await carregarProdutos();
 
             const produto =
                 produtos.find(
@@ -1648,7 +1807,7 @@
            FINALIZAR PEDIDO
         ========================================== */
 
-        async function finalizarPedido() {
+        function finalizarPedido() {
 
             if (carrinho.length === 0) {
 
@@ -1709,18 +1868,6 @@
                 valorTotal
                     .toFixed(2)
                     .replace(".", ",");
-
-            try {
-                const vendas = carrinho.map(item => ({
-                    produto_id: String(item.id),
-                    produto_nome: item.nome,
-                    quantidade: item.quantidade,
-                    preco_unitario: item.preco,
-                    preco_total: item.preco * item.quantidade
-                }));
-                const { error: vendaError } = await supabaseCliente.from("vendas").insert(vendas);
-                if (vendaError) console.warn("Venda não registrada no caixa:", vendaError);
-            } catch (e) { console.warn("Erro ao registrar venda:", e); }
 
             const url =
                 "https://wa.me/" +
