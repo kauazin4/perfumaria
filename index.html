@@ -233,6 +233,71 @@
 
 
         /* =========================
+           FILTRO POR MARCAS
+        ========================== */
+
+        .area-marcas {
+            max-width: 1200px;
+            margin: 0 auto 22px;
+            padding: 0 20px;
+        }
+
+        .titulo-marcas {
+            color: #b83f6b;
+            font-size: 16px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .lista-marcas {
+            display: flex;
+            gap: 9px;
+            flex-wrap: wrap;
+        }
+
+        .botao-marca {
+            border: 1px solid #efcbd8;
+            background: #fff;
+            color: #b83f6b;
+            padding: 9px 15px;
+            border-radius: 22px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+        .botao-marca:hover {
+            background: #fbe7ef;
+        }
+
+        .botao-marca.ativo {
+            background: #d85b86;
+            color: #fff;
+            border-color: #d85b86;
+        }
+
+        @media (max-width: 650px) {
+            .area-marcas {
+                padding: 0 12px;
+                margin-bottom: 18px;
+            }
+
+            .lista-marcas {
+                flex-wrap: nowrap;
+                overflow-x: auto;
+                padding-bottom: 4px;
+                scrollbar-width: thin;
+            }
+
+            .botao-marca {
+                flex: 0 0 auto;
+                font-size: 13px;
+                padding: 8px 13px;
+            }
+        }
+
+        /* =========================
            PRODUTOS
         ========================== */
 
@@ -922,6 +987,16 @@
 
 
     <!-- =========================
+         FILTRO POR MARCAS
+    ========================== -->
+
+    <section class="area-marcas">
+        <div class="titulo-marcas">🏷️ Escolha uma marca</div>
+        <div id="listaMarcas" class="lista-marcas"></div>
+    </section>
+
+
+    <!-- =========================
          PRODUTOS
     ========================== -->
 
@@ -1109,6 +1184,7 @@
         ========================================== */
 
         let produtos = [];
+        let marcaSelecionada = "";
 
 
         let carrinho = [];
@@ -1134,7 +1210,8 @@
 
                 produtos = data || [];
 
-                mostrarProdutos();
+                carregarMarcas();
+                aplicarFiltros();
 
             } catch (erro) {
 
@@ -1152,6 +1229,90 @@
                     "Não foi possível carregar os perfumes. Tente atualizar a página.";
             }
 
+        }
+
+        /* =========================================
+           FILTRO POR MARCAS
+        ========================================== */
+
+        function normalizarMarca(marca) {
+            return String(marca || "").trim().toLowerCase();
+        }
+
+        function carregarMarcas() {
+            const container = document.getElementById("listaMarcas");
+            if (!container) return;
+
+            const mapa = new Map();
+
+            produtos.forEach(produto => {
+                const marca = String(produto.marca || "").trim();
+                if (marca) mapa.set(normalizarMarca(marca), marca);
+            });
+
+            const marcas = [...mapa.values()].sort((a, b) =>
+                a.localeCompare(b, "pt-BR")
+            );
+
+            container.innerHTML = "";
+
+            const todas = document.createElement("button");
+            todas.type = "button";
+            todas.className =
+                "botao-marca" + (marcaSelecionada === "" ? " ativo" : "");
+            todas.textContent = "Todas";
+            todas.onclick = () => selecionarMarca("");
+            container.appendChild(todas);
+
+            marcas.forEach(marca => {
+                const botao = document.createElement("button");
+                botao.type = "button";
+                botao.className =
+                    "botao-marca" +
+                    (
+                        normalizarMarca(marca) ===
+                        normalizarMarca(marcaSelecionada)
+                            ? " ativo"
+                            : ""
+                    );
+                botao.textContent = marca;
+                botao.onclick = () => selecionarMarca(marca);
+                container.appendChild(botao);
+            });
+        }
+
+        function selecionarMarca(marca) {
+            marcaSelecionada = marca || "";
+            carregarMarcas();
+            aplicarFiltros();
+        }
+
+        function aplicarFiltros() {
+            const campo = document.getElementById("pesquisa");
+            const texto = campo
+                ? campo.value.toLowerCase().trim()
+                : "";
+
+            const filtrados = produtos.filter(produto => {
+                const nome = String(produto.nome || "").toLowerCase();
+                const marca = String(produto.marca || "").toLowerCase();
+                const sku = String(produto.sku || "").toLowerCase();
+
+                const correspondeTexto =
+                    !texto ||
+                    nome.includes(texto) ||
+                    marca.includes(texto) ||
+                    sku.includes(texto);
+
+                const correspondeMarca =
+                    !marcaSelecionada ||
+                    normalizarMarca(produto.marca) ===
+                    normalizarMarca(marcaSelecionada);
+
+                return correspondeTexto && correspondeMarca;
+            });
+
+            mostrarProdutos(filtrados);
         }
 
         /* =========================================
@@ -1426,6 +1587,8 @@
                 }
 
                 produtos = data || [];
+                carregarMarcas();
+                aplicarFiltros();
 
             } catch (erro) {
 
@@ -1692,62 +1855,9 @@
         ========================================== */
 
         function pesquisarProdutos() {
-
-            // A pesquisa usa os produtos que já estão em memória.
-            // Não consulta o Supabase a cada tecla digitada.
-            const texto =
-                document
-                    .getElementById(
-                        "pesquisa"
-                    )
-                    .value
-                    .toLowerCase()
-                    .trim();
-
-
-            const filtrados =
-                produtos.filter(
-                    produto => {
-
-                        const nome =
-                            (
-                                produto.nome ||
-                                ""
-                            )
-                                .toLowerCase();
-
-
-                        const marca =
-                            (
-                                produto.marca ||
-                                ""
-                            )
-                                .toLowerCase();
-
-
-                        const sku =
-                            (
-                                produto.sku ||
-                                ""
-                            )
-                                .toLowerCase();
-
-
-                        return (
-                            nome.includes(texto) ||
-                            marca.includes(texto) ||
-                            sku.includes(texto)
-                        );
-
-                    }
-                );
-
-
-            mostrarProdutos(
-                filtrados
-            );
-
+            aplicarFiltros();
         }
+
 
 
         /* =========================================
@@ -1919,6 +2029,7 @@
         carregarProdutos();
         configurarLogoEmpresa();
         atualizarCarrinho();
+        carregarMarcas();
 
         // Atualiza o estoque em segundo plano sem travar a interface.
         setInterval(() => {
